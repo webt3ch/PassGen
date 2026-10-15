@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#10120f" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'" />
+    <meta name="description" content="A privacy-first password generator that works locally in your browser." />
+    <title>PassGen — Password generator</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script type="module" src="src/app.js"></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <a class="brand" href="./" aria-label="PassGen home">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 32 32" fill="none">
+              <path d="M16 3.5 27 8v7.2c0 6.5-4.7 10.9-11 13.3C9.7 26.1 5 21.7 5 15.2V8l11-4.5Z" stroke="currentColor" stroke-width="1.8" />
+              <path d="m11.3 15.7 3.1 3.1 6.5-6.7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </span>
+          <span class="brand-word">pass<span>gen</span></span>
+          <span class="version-tag">v1.4</span>
+        </a>
+        <div class="topbar-status"><span class="status-dot"></span> Browser-only</div>
+      </header>
+
+      <main>
+        <section class="intro" aria-labelledby="page-title">
+          <p class="eyebrow"><span class="eyebrow-line"></span> A SMALL TOOL FOR A BIG JOB</p>
+          <h1 id="page-title">Passwords,<br /><span>generated properly.</span></h1>
+          <p class="intro-copy">Create a random password with control over its length and character set. Generation happens in your browser, without an account or application server.</p>
+        </section>
+
+        <section class="workspace" aria-label="Password generator">
+          <div class="panel result-panel">
+            <div class="panel-heading">
+              <div>
+                <p class="section-kicker">01 / GENERATED OUTPUT</p>
+                <h2>Your password</h2>
+              </div>
+              <span id="outputState" class="output-live" data-state="idle" aria-live="polite">
+                <span class="status-dot" aria-hidden="true"></span>
+                <span id="outputStateLabel">Preparing password</span>
+              </span>
+            </div>
+
+            <div class="password-display" aria-label="Generated password area">
+              <output id="passwordOutput" class="password-text" aria-label="Generated password" aria-live="off">••••••••••••••••••••</output>
+              <button id="visibilityButton" class="icon-button" type="button" aria-label="Show password" aria-pressed="false" title="Show or hide password">
+                <svg class="eye-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M2.5 12s3.4-6 9.5-6 9.5 6 9.5 6-3.4 6-9.5 6-9.5-6-9.5-6Z" stroke="currentColor" stroke-width="1.7"/><circle cx="12" cy="12" r="2.7" stroke="currentColor" stroke-width="1.7"/></svg>
+              </button>
+            </div>
+
+            <div class="strength-row" aria-labelledby="entropyLabel">
+              <div class="strength-label"><span id="entropyLabel">Estimated entropy</span><span id="entropyValue" class="entropy-value">— bits</span></div>
+              <p class="strength-note" id="strengthNote">Generate a password to see the theoretical entropy estimate.</p>
+              <p class="output-metadata" id="outputMetadata">No password has been generated yet.</p>
+            </div>
+
+            <p id="configurationNotice" class="configuration-notice" role="status" aria-live="polite" hidden>
+              <strong id="configurationNoticeTitle">Configuration changed — generate a new password.</strong>
+              <span id="configurationNoticeBody">Generate a new password to apply your current settings.</span>
+            </p>
+
+            <div class="result-actions">
+              <button id="generateButton" class="button button-primary" type="button">
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 7v5h-5M4.8 9a7.5 7.5 0 0 1 12.6-2L20 12M4 17v-5h5m10.2 3a7.5 7.5 0 0 1-12.6 2L4 12" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Generate password <span class="button-shortcut">↵</span>
+              </button>
+              <button id="copyButton" class="button button-secondary" type="button">
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="M16 8V5.8A1.8 1.8 0 0 0 14.2 4H5.8A1.8 1.8 0 0 0 4 5.8v8.4A1.8 1.8 0 0 0 5.8 16H8" stroke="currentColor" stroke-width="1.7"/></svg>
+                Copy password
+              </button>
+            </div>
+            <p id="statusMessage" class="status-message" data-type="default" role="status" aria-live="polite" aria-atomic="true"><span class="status-icon" aria-hidden="true"></span><span id="statusText"></span></p>
+          </div>
+
+          <aside class="panel settings-panel" aria-labelledby="settings-title">
+            <div class="panel-heading settings-heading">
+              <div>
+                <p class="section-kicker">02 / CONFIGURATION</p>
+                <h2 id="settings-title">Make it yours</h2>
+              </div>
+              <span class="settings-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M4 7h9m4 0h3M4 17h3m4 0h9M13 4v6M7 14v6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+              </span>
+            </div>
+
+            <div class="length-setting">
+              <div class="setting-title-row"><label for="lengthRange">Password length</label><output id="lengthValue" for="lengthRange">20</output></div>
+              <input id="lengthRange" class="length-range" type="range" min="8" max="64" value="20" step="1" aria-describedby="lengthHelp" />
+              <div class="range-limits"><span>8 characters</span><span>64 characters</span></div>
+              <p id="lengthHelp" class="sr-only">Choose a password length from 8 to 64 characters.</p>
+              <div class="presets" role="group" aria-label="Common password lengths">
+                <button type="button" class="preset-button" data-length="16" aria-label="Set password length to 16 characters" aria-pressed="false">16</button>
+                <button type="button" class="preset-button is-selected" data-length="20" aria-label="Set password length to 20 characters" aria-pressed="true">20</button>
+                <button type="button" class="preset-button" data-length="32" aria-label="Set password length to 32 characters" aria-pressed="false">32</button>
+                <button type="button" class="preset-button" data-length="48" aria-label="Set password length to 48 characters" aria-pressed="false">48</button>
+              </div>
+            </div>
+
+            <div class="settings-divider"></div>
+
+            <fieldset class="character-settings" aria-describedby="settingsError">
+              <legend>Character sets</legend>
+              <label class="character-option" for="uppercaseToggle">
+                <span class="character-symbol" aria-hidden="true">A<span class="symbol-small">Z</span></span>
+                <span class="character-description"><strong>Uppercase</strong><small>A–Z</small></span>
+                <input id="uppercaseToggle" type="checkbox" checked />
+                <span class="switch" aria-hidden="true"></span>
+              </label>
+              <label class="character-option" for="lowercaseToggle">
+                <span class="character-symbol lowercase-symbol" aria-hidden="true">a<span class="symbol-small">z</span></span>
+                <span class="character-description"><strong>Lowercase</strong><small>a–z</small></span>
+                <input id="lowercaseToggle" type="checkbox" checked />
+                <span class="switch" aria-hidden="true"></span>
+              </label>
+              <label class="character-option" for="numbersToggle">
+                <span class="character-symbol number-symbol" aria-hidden="true">09</span>
+                <span class="character-description"><strong>Numbers</strong><small>0–9</small></span>
+                <input id="numbersToggle" type="checkbox" checked />
+                <span class="switch" aria-hidden="true"></span>
+              </label>
+              <label class="character-option" for="symbolsToggle">
+                <span class="character-symbol symbol-symbol" aria-hidden="true">@#</span>
+                <span class="character-description"><strong>Symbols</strong><small>! @ # $ %</small></span>
+                <input id="symbolsToggle" type="checkbox" checked />
+                <span class="switch" aria-hidden="true"></span>
+              </label>
+            </fieldset>
+
+            <div class="settings-divider"></div>
+
+            <label class="ambiguous-option" for="ambiguousToggle">
+              <span class="ambiguous-check"><input id="ambiguousToggle" type="checkbox" /><span aria-hidden="true" class="checkmark"></span></span>
+              <span class="ambiguous-copy"><strong>Exclude ambiguous characters</strong><small>Removes characters like I, l, 1, O and 0.</small></span>
+            </label>
+            <p id="settingsError" class="settings-error" role="alert" hidden>Select at least one character set.</p>
+          </aside>
+        </section>
+
+        <section class="trust-strip" aria-label="Privacy and security notes">
+          <div class="trust-item"><span class="trust-icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="5" y="10" width="14" height="11" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M8 10V7a4 4 0 1 1 8 0v3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span><span><strong>Private by design</strong><small>No network requests or analytics</small></span></div>
+          <div class="trust-item"><span class="trust-icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3v2m0 14v2M3 12h2m14 0h2M5.6 5.6 7 7m10 10 1.4 1.4m0-12.8L17 7M7 17l-1.4 1.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="12" r="5" stroke="currentColor" stroke-width="1.6"/></svg></span><span><strong>Web Crypto randomness</strong><small>Uniform selection without modulo bias</small></span></div>
+          <div class="trust-item"><span class="trust-icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 5h14v14H5z" stroke="currentColor" stroke-width="1.6"/><path d="m8 12 2.5 2.5L16 9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span><strong>No password history</strong><small>Nothing stored between sessions</small></span></div>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <span>PASSGEN <span class="footer-separator">/</span> BUILT FOR EVERYDAY SECURITY</span>
+        <a href="README.md">About this project <span aria-hidden="true">↗</span></a>
+      </footer>
+    </div>
+  </body>
+</html>
