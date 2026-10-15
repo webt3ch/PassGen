@@ -63,7 +63,7 @@ passgen/
 │   └── generator.test.js
 ├── docs/
 │   └── screenshots/
-│       └── passgen-preview.svg
+│       └── passgen.png
 ├── .github/
 │   └── workflows/
 │       └── test.yml
