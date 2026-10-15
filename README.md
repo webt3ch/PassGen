@@ -17,9 +17,9 @@ A small, privacy-first password generator built with vanilla HTML, CSS and JavaS
 
 ## Preview
 
-The illustration below shows the interface layout; it is a static preview, not an interactive demo.
+PassGen interface screenshot. This is a static image, not an interactive demo.
 
-![PassGen interface preview](docs/screenshots/passgen-preview.svg)
+![PassGen interface preview](docs/screenshots/passgen.png)
 
 ## Quick links
 
