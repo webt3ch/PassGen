@@ -2,22 +2,24 @@
 
 A small, privacy-first password generator built with vanilla HTML, CSS and JavaScript. PassGen runs in the browser, uses the Web Crypto API for random generation, and makes no network requests.
 
-![PassGen](https://img.shields.io/badge/stack-HTML%20%2F%20CSS%20%2F%20JavaScript-c7f36b?labelColor=171a16)
-![Tests](https://img.shields.io/badge/tests-Node.js%20built--in-8abf52?labelColor=171a16)
-![License](https://img.shields.io/badge/license-MIT-8abf52?labelColor=171a16)
+![Stack: HTML, CSS and JavaScript](https://img.shields.io/badge/stack-HTML%20%2F%20CSS%20%2F%20JavaScript-c7f36b?labelColor=171a16)
+![Tests: Node.js built-in](https://img.shields.io/badge/tests-Node.js%20built--in-8abf52?labelColor=171a16)
+![License: MIT](https://img.shields.io/badge/license-MIT-8abf52?labelColor=171a16)
 
 ## Features
 
 - Generate passwords from 8 to 64 characters.
 - Configure uppercase, lowercase, digits and symbols.
-- Uses Web Crypto and rejection sampling for unbiased character selection.
-- Estimates the theoretical entropy of the valid output space.
+- Use Web Crypto and rejection sampling for unbiased character selection.
+- Estimate the theoretical entropy of the valid output space.
 - Copy passwords with accessible feedback and explicit configuration states.
-- Runs locally without a build process or third-party runtime dependencies.
+- Run locally without a build process or third-party runtime dependencies.
 
 ## Preview
 
-![PassGen interface](docs/screenshots/passgen.png)
+The illustration below shows the interface layout; it is a static preview, not an interactive demo.
+
+![PassGen interface preview](docs/screenshots/passgen-preview.svg)
 
 ## Quick links
 
@@ -39,7 +41,7 @@ Open <http://localhost:8000> in a modern browser. A secure context such as HTTPS
 
 ## Tests
 
-Node.js 20+ is recommended. Tests use Node's built-in runner.
+Node.js 20+ is recommended. Tests use Node's built-in runner and do not require dependencies.
 
 ```bash
 npm test
@@ -61,8 +63,10 @@ passgen/
 │   └── generator.test.js
 ├── docs/
 │   └── screenshots/
-│       └── passgen.png
-├── .github/workflows/test.yml
+│       └── passgen-preview.svg
+├── .github/
+│   └── workflows/
+│       └── test.yml
 ├── package.json
 ├── LICENSE
 └── README.md
