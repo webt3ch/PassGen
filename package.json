@@ -1,0 +1,14 @@
+{
+  "name": "passgen",
+  "version": "1.4.0",
+  "private": false,
+  "description": "A privacy-first password generator built with vanilla JavaScript and the Web Crypto API.",
+  "type": "module",
+  "scripts": {
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "MIT"
+}
